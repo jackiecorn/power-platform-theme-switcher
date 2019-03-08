@@ -1,0 +1,13 @@
+{
+	"id": "power-platform-theme-switcher",
+	"name": "Power Platform Theme Switcher",
+	"requiredTeamIds": ["540681010011095157"],
+	"author": "Jackie Chui",
+	"description": "Apply Flow or Power BI theme colors to Power Platform components.",
+	"instructions": "Right click on any Power Platform components and select 'Apply [Product name] theme'",
+	"images": [
+		"screenshots/screenshot1.jpg",
+		"screenshots/screenshot2.jpg"
+	],
+	"js": ["app.js"]
+}
