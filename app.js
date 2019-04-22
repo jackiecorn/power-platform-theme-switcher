@@ -18,11 +18,11 @@ let styleMapping;
 let libraryStyles;
 
 const convertSelection = () => {
-	convert(figmaPlus.scene.selection);
+	convert(figmaPlus.currentPage.selection);
 };
 
 const convertAll = () => {
-	convert(figmaPlus.scene.currentPage);
+	convert(figmaPlus.currentPage);
 };
 
 const convert = async nodes => {
@@ -257,7 +257,7 @@ const sortNodes = nodes => {
 };
 
 const changeThemeColor = async nodes => {
-	figmaPlus.showToast(`Applying ${product} theme...`, 10);
+	figmaPlus.showToast({ message: `Applying ${product} theme...`, timeoutInSeconds: 10 });
 	for (i = 0; i < nodeTypes.length; i++) {
 		for (j = 0; j < themeNames.length; j++) {
 			if (nodes[nodeTypes[i]][themeNames[j]].length > 0) {
@@ -403,50 +403,57 @@ const changeThemeColor = async nodes => {
 				}
 			}
 	}
-	figmaPlus.showToast(`✔️ ${product} theme applied`);
+	figmaPlus.showToast({ message: `✔️ ${product} theme applied` });
 };
 
-figmaPlus.createContextMenuItem.Canvas(`Apply Flow theme to all`, convertAll, () => product === 'Flow');
-figmaPlus.createContextMenuItem.Canvas(`Apply Power BI theme to all`, convertAll, () => product === 'Power BI');
-figmaPlus.createContextMenuItem.Selection(`Apply Flow theme`, convertSelection, () => product === 'Flow');
-figmaPlus.createContextMenuItem.Selection(`Apply Power BI theme`, convertSelection, () => product === 'Power BI');
-figmaPlus.createPluginsMenuItem('Power Platform Theme Switcher', null, null, null, [
-	{
-		itemLabel: `Apply Flow theme to selection`,
-		triggerFunction: convertSelection,
-		condition: () => product === 'Flow' || figmaPlus.scene.selection.length < 1
-	},
-	{
-		itemLabel: `Apply Power BI theme to selection`,
-		triggerFunction: convertSelection,
-		condition: () => product === 'Power BI' || figmaPlus.scene.selection.length < 1
-	},
-	{
-		itemLabel: `Apply Flow theme to current page`,
-		triggerFunction: convertAll,
-		condition: () => product === 'Flow'
-	},
-	{
-		itemLabel: `Apply Power BI theme to current page`,
-		triggerFunction: convertAll,
-		condition: () => product === 'Power BI'
-	},
-	{
-		itemLabel: 'Set to use Flow theme',
-		triggerFunction: () => {
-			product = 'Flow';
-			localStorage.setItem('theme-switcher-product', 'Flow');
-			figmaPlus.showToast('Plugin settings have changed. Refresh this tab to start using Flow theme.');
+figmaPlus.addCommand({
+	label: 'Power Platform Theme Switcher',
+	submenu: [
+		{
+			label: `Apply Flow theme to selection`,
+			action: convertSelection,
+			condition: () => product === 'Flow' && figmaPlus.currentPage.selection.length > 0
 		},
-		condition: () => product === 'Power BI'
-	},
-	{
-		itemLabel: 'Set to use Power BI',
-		triggerFunction: () => {
-			product = 'Power BI';
-			localStorage.setItem('theme-switcher-product', 'Power BI');
-			figmaPlus.showToast('Plugin settings have changed. Refresh this tab to start using Power BI theme.');
+		{
+			label: `Apply Power BI theme to selection`,
+			action: convertSelection,
+			condition: () => product === 'Power BI' && figmaPlus.currentPage.selection.length > 0
 		},
-		condition: () => product === 'Flow'
-	}
-]);
+		{
+			label: `Set to use Flow theme`,
+			action: () => {
+				product = 'Flow';
+				localStorage.setItem('theme-switcher-product', 'Flow');
+				figmaPlus.showToast({ message: 'Plugin settings have changed. Refresh this tab to start using Flow theme.' });
+			},
+			condition: () => product === 'Power BI'
+		},
+		{
+			label: `Set to use Power BI theme`,
+			action: () => {
+				product = 'Power BI';
+				localStorage.setItem('theme-switcher-product', 'Power BI');
+				figmaPlus.showToast({
+					message: 'Plugin settings have changed. Refresh this tab to start using Power BI theme.'
+				});
+			},
+			condition: () => product === 'Flow'
+		}
+	]
+});
+
+figmaPlus.addCommand({
+	label: 'Apply Flow theme',
+	action: convertSelection,
+	condition: () => product === 'Flow' && figmaPlus.currentPage.selection.length > 0,
+	showInSelectionMenu: true,
+	hideInMainMenu: true
+});
+
+figmaPlus.addCommand({
+	label: 'Apply Power BI theme',
+	action: convertSelection,
+	condition: () => product === 'Power BI' && figmaPlus.currentPage.selection.length > 0,
+	showInSelectionMenu: true,
+	hideInMainMenu: true
+});
