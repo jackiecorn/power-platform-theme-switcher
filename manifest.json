@@ -5,9 +5,6 @@
 	"author": "Jackie Chui",
 	"description": "Apply Flow or Power BI theme colors to Power Platform components.",
 	"instructions": "Right click on any Power Platform components and select 'Apply [Product name] theme'",
-	"images": [
-		"screenshots/screenshot1.jpg",
-		"screenshots/screenshot2.jpg"
-	],
+	"images": ["screenshots/screenshot1.png", "screenshots/screenshot2.jpg"],
 	"js": ["app.js"]
 }

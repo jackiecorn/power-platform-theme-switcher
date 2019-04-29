@@ -141,11 +141,11 @@ const sortNodes = nodes => {
 		nodes = nodes
 			.map(node => {
 				let includedNodes = [node];
-				if (node.children) includedNodes.push(...node.getAllDescendents());
+				if (node.children) includedNodes.push(...node.findAll());
 				return includedNodes;
 			})
 			.reduce((a, b) => a.concat(b), []);
-	} else nodes = nodes.getAllDescendents();
+	} else nodes = nodes.findAll();
 	nodes = nodes.map(getNodeStyle);
 
 	const fillNodes = nodes.filter(
